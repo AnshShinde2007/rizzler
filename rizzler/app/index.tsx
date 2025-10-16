@@ -10,6 +10,8 @@ import {
   Platform,
   Image,
 } from 'react-native';
+import { useNavigation } from 'expo-router';  // ✅ works in Expo Router
+import { Ionicons } from '@expo/vector-icons';
 import { fetchRizz } from './api/fetchrizz';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -24,6 +26,7 @@ const Home: React.FC = () => {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const flatListRef = useRef<FlatList>(null);
+  const navigation = useNavigation();
 
   const sendMessage = async () => {
     if (!input.trim()) return;
@@ -76,15 +79,16 @@ const Home: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      {/* Instagram-style header */}
+      {/* Header with hamburger */}
       <View style={styles.header}>
-        <Image
-          source={require('./assets/logo.png')} // your Rizzler logo
-          style={styles.logo}
-        />
+        <TouchableOpacity onPress={() => navigation.openDrawer()}>
+          <Ionicons name="menu" size={28} color="#6A1B9A" />
+        </TouchableOpacity>
+        <Image source={require('./assets/logo2.png')} style={styles.logo} />
         <Text style={styles.headerText}>Rizzler</Text>
       </View>
 
+      {/* Chat area */}
       <KeyboardAvoidingView
         style={styles.container}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -101,10 +105,12 @@ const Home: React.FC = () => {
           }
         />
 
+        {/* Input bar */}
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
             placeholder="Type a message..."
+            placeholderTextColor="#888"
             value={input}
             onChangeText={setInput}
           />
@@ -122,19 +128,9 @@ const Home: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: '#fff' },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 15,
-    borderBottomWidth: 1,
-    borderColor: '#ddd',
-    backgroundColor: '#fff',
-  },
-  logo: { width: 30, height: 30, marginRight: 10, borderRadius: 15 },
-  headerText: { fontSize: 20, fontWeight: 'bold', color: '#000' },
-
-  container: { flex: 1 },
+  safeArea: { flex: 1, backgroundColor: '#FAFAFA' },
+  
+container: { flex: 1 },
   chatContainer: { padding: 10, paddingBottom: 80 },
   messageContainer: {
     maxWidth: '75%',
@@ -143,45 +139,47 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   userMessage: {
-    backgroundColor: '#DCF8C6',
+    backgroundColor: '#6A1B9A',
     alignSelf: 'flex-end',
-    borderTopRightRadius: 0,
+    borderTopRightRadius: 5,
   },
   aiMessage: {
-    backgroundColor: '#ECECEC',
+    backgroundColor: '#F0F2F5',
     alignSelf: 'flex-start',
-    borderTopLeftRadius: 0,
+    borderTopLeftRadius: 5,
   },
-  userText: { color: '#000' },
-  aiText: { color: '#000' },
+  userText: { color: '#FFFFFF' },
+  aiText: { color: '#000000' },
 
   inputContainer: {
     flexDirection: 'row',
     paddingHorizontal: 10,
     paddingVertical: 8,
     borderTopWidth: 1,
-    borderColor: '#ddd',
-    backgroundColor: '#fff',
+    borderColor: '#E0E0E0',
+    backgroundColor: '#FFFFFF',
     position: 'absolute',
     bottom: 0,
     width: '100%',
   },
   input: {
     flex: 1,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#F0F2F5',
     borderRadius: 25,
     paddingHorizontal: 15,
+    paddingVertical: 10,
     fontSize: 16,
     marginRight: 10,
+    color: '#000',
   },
   sendButton: {
-    backgroundColor: '#3897f0', // Instagram blue
+    backgroundColor: '#D81B60',
     borderRadius: 25,
     paddingHorizontal: 20,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  sendText: { color: '#fff', fontWeight: 'bold' },
+  sendText: { color: '#FFFFFF', fontWeight: 'bold' },
 });
 
 export default Home;

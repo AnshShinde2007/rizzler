@@ -1,6 +1,10 @@
-import { Stack } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Image, StyleSheet, View,Text } from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
+import { Drawer } from 'expo-router/drawer';
+import Settings from './Settings';
+import Home from './index';
+import About from './About';
+
 
 
 export default function RootLayout() {
@@ -8,41 +12,41 @@ export default function RootLayout() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setShowSplash(false); // hide splash after delay
-    }, 2000); // 2 seconds delay
-
+      setShowSplash(false);
+    }, 2000);
     return () => clearTimeout(timer);
   }, []);
 
   if (showSplash) {
-    // Your custom splash page
     return (
       <View style={styles.splashContainer}>
-        <Text>Rizz</Text>
-        
+        <Image
+          source={require('./assets/logo2.png')} // replace with your logo path
+          style={styles.reactLogo}
+          resizeMode="contain"
+        />
       </View>
     );
   }
 
-  // Main app stack after splash
-  return <Stack screenOptions={{ headerShown: false }} />;
+  return (
+    <Drawer screenOptions={{ headerShown: false }}>
+      <Drawer.Screen name="index" options={{ title: 'Home' }} />
+      <Drawer.Screen name="Settings" options={{ title: 'Settings' }} />
+      <Drawer.Screen name="About" options={{ title: 'About' }} />
+    </Drawer>
+  );
 }
 
 const styles = StyleSheet.create({
-  splashText: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#fff',
-    marginBottom: 20,
-  },
   splashContainer: {
     flex: 1,
-    backgroundColor: '#ffff',
-    justifyContent: 'center', // vertical center
-    alignItems: 'center',     // horizontal center
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   reactLogo: {
-    height: 251,
-    width: 272,
-  }
+    height: 200,
+    width: 200,
+  },
 });
